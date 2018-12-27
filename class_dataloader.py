@@ -16,7 +16,7 @@ data_transforms = {
         transforms.ToTensor(),
         transforms.Normalize(mean, std)]),
     'val': transforms.Compose([
-        transforms.Resize(256),
+        transforms.Resize((224, 224)),
         transforms.ToTensor(),
         transforms.Normalize(mean, std)])
 }
@@ -30,3 +30,10 @@ def get_dataloader(ds_dir, bs):
 
     print("=Classes: {}".format(train_datasets.classes))
     return train_dataloaders, val_dataloaders
+
+
+# FIXME merge get_dataloader and this method
+def get_testdataloader(ds_dir, bs, mode):
+    test_datasets = datasets.ImageFolder(os.path.join(ds_dir, mode), data_transforms['val'])
+    print("=Classes: {}".format(test_datasets.classes))
+    return torch.utils.data.DataLoader(test_datasets, batch_size=bs, shuffle=False, num_workers=4)
